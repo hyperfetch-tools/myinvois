@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self' https://buy.polar.sh https://polar.sh;" />
   <title>Converter Workspace — MyInvois Batch Doctor | Hyperfetch Tools</title>
   <meta name="description" content="Convert Shopee MY, Lazada, TikTok Shop & POS order CSVs into official LHDN MyInvois 11-Sheet Excel (.xls) & PEPPOL UBL 2.1 XML files." />
   <link rel="canonical" href="https://hyperfetch-tools.github.io/myinvois/app.html" />
@@ -775,7 +777,6 @@
         </div>
         <span id="docChunkSummary" class="mono" style="font-size:11.5px;color:var(--emerald-dark);font-weight:600;"></span>
       </div>
-
       <div id="msicWarningBox" class="msic-banner">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" style="flex-shrink:0;">
           <path d="M8 2L1.5 13.5h13L8 2zM8 6.5v3.5M8 11.8h.01"/>
@@ -990,12 +991,16 @@
     let selectedCurrency = 'MYR';
     let isUnlocked = Boolean(localStorage.getItem('zyk_myinvois_key'));
 
+    const MAX_CSV_BYTES = 10 * 1024 * 1024; // 10 MB client safety cap
+    const MAX_BATCH_ROWS = 5000;
+
     function escHtml(s) {
       return String(s ?? '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
     function refreshUnlockUi() {
@@ -1025,6 +1030,22 @@
       });
     });
 
+    async function loadCsvFileSafely(file) {
+      if (!file) return;
+      const lbl = document.getElementById('loadedFileLabel');
+      if (file.size > MAX_CSV_BYTES) {
+        lbl.textContent = `File rejected (${(file.size / (1024 * 1024)).toFixed(1)} MB): Maximum upload size is 10 MB per CSV batch.`;
+        return;
+      }
+      if (!/.(csv|tsv|txt)$/i.test(file.name || '') && file.type && !/^text/|csv|excel/i.test(file.type)) {
+        lbl.textContent = `Unsupported file "${file.name}": Please select a .csv, .tsv, or .txt export.`;
+        return;
+      }
+      lbl.textContent = `Loaded file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      document.getElementById('rawCsvBox').value = await file.text();
+      window.runAudit();
+    }
+
     const dropSurface = document.getElementById('dropSurface');
     dropSurface.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -1034,19 +1055,11 @@
     dropSurface.addEventListener('drop', async (e) => {
       e.preventDefault();
       dropSurface.classList.remove('dragover');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file) return;
-      document.getElementById('loadedFileLabel').textContent = `Loaded file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-      document.getElementById('rawCsvBox').value = await file.text();
-      window.runAudit();
+      await loadCsvFileSafely(e.dataTransfer?.files?.[0]);
     });
 
     document.getElementById('csvFileInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      document.getElementById('loadedFileLabel').textContent = `Loaded file: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-      document.getElementById('rawCsvBox').value = await file.text();
-      window.runAudit();
+      await loadCsvFileSafely(e.target.files[0]);
     });
 
     window.toggleRawEditor = () => {
@@ -1142,8 +1155,17 @@
 
     window.runAudit = () => {
       const csvText = document.getElementById('rawCsvBox').value;
+      if (csvText.length > MAX_CSV_BYTES) {
+        document.getElementById('loadedFileLabel').textContent = 'Pasted CSV exceeds 10 MB safety limit — please split by fortnight or week.';
+        return;
+      }
       const parsed = parseCsv(csvText);
       if (!parsed.rows.length) return;
+      if (parsed.rows.length > MAX_BATCH_ROWS) {
+        document.getElementById('loadedFileLabel').textContent =
+          `Batch has ${parsed.rows.length.toLocaleString()} rows (max ${MAX_BATCH_ROWS.toLocaleString()} per file). Please split into two files.`;
+        return;
+      }
 
       currentAudit = diagnoseAndRepairBatch(parsed.rows, {
         name: document.getElementById('supName').value,
