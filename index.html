@@ -1099,58 +1099,104 @@
 
       <div class="drawer-body">
         <p id="drawerDesc" style="margin:0 0 14px;font-size:13px;color:var(--ink-secondary);">
-          Pay <strong>RM 29 once</strong> instead of RM 120/month accounting software. Unlocks unlimited rows &amp; unlimited monthly batches forever.
+          Pay once instead of RM 120/month accounting software. Unlocks unlimited rows &amp; unlimited monthly batches forever.
         </p>
 
         <div style="margin-bottom:14px;">
-          <label class="field-label">1. Choose Currency (via Wise)</label>
-          <div class="segmented" style="width:100%;display:grid;grid-template-columns:1fr 1fr;">
-            <button type="button" id="curBtnMYR" class="seg-btn active" onclick="selectCheckoutCurrency('MYR')">MYR 29 · Malaysia</button>
-            <button type="button" id="curBtnUSD" class="seg-btn" onclick="selectCheckoutCurrency('USD')">USD 8 · International</button>
+          <label class="field-label">Payment Method</label>
+          <div class="segmented" style="width:100%;display:grid;grid-template-columns:1.25fr 1fr;">
+            <button type="button" id="railBtnCard" class="seg-btn active" onclick="selectPaymentRail('CARD')">Card / Apple &amp; Google Pay</button>
+            <button type="button" id="railBtnWise" class="seg-btn" onclick="selectPaymentRail('WISE')">Wise Transfer (RM 29)</button>
           </div>
         </div>
 
-        <div style="margin-bottom:14px;">
-          <label class="field-label" for="buyerEmailInput">2. Your Email for Backup Key Receipt <span style="font-weight:400;color:var(--ink-muted);">(Recommended)</span></label>
-          <div style="display:flex;gap:8px;">
-            <input id="buyerEmailInput" type="email" class="text-input" placeholder="you@company.com.my" />
-            <button type="button" class="btn btn-ink" style="white-space:nowrap;" onclick="startAutoOrder()">Update Email</button>
+        <!-- Option A: Instant Credit / Debit Card + Apple Pay + Google Pay (Polar.sh MoR) -->
+        <div id="cardPaySection">
+          <div class="price-summary-card">
+            <div class="kv-row">
+              <span class="kv-key">License Tier</span>
+              <span class="kv-val" id="cardProductLabel" style="font-family:var(--font-sans);">Lifetime Unlimited</span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">One-Time Total</span>
+              <span class="kv-val" id="cardPriceLabel" style="font-size:15px;color:var(--forest);">USD 6.99 (~RM 30)</span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">Accepted Cards</span>
+              <span class="kv-val" style="font-family:var(--font-sans);font-weight:500;">Visa · Mastercard · Apple / Google Pay</span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">Instant Delivery</span>
+              <span class="kv-val" style="font-family:var(--font-sans);font-weight:500;color:var(--ink-secondary);">Auto-unlocks on return + email receipt</span>
+            </div>
+
+            <div style="margin-top:14px;">
+              <a id="polarCardBuyLink" href="https://buy.polar.sh/polar_cl_QdGYU1CfYYheRMXdEi0I82DOmggHEDCHNiHfV11vUGM" class="btn btn-ink" style="width:100%;padding:11px 16px;font-size:13.5px;">
+                Pay Securely by Card / Apple Pay →
+              </a>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:var(--ink-muted);text-align:center;">
+              Processed by Polar.sh (Hyperfetch Tools) · Malaysian &amp; global debit/credit cards accepted · Zero recurring fees.
+            </div>
+
+            <div id="polarReturnBanner" class="poll-banner" style="display:none;margin-top:12px;">
+              <span><span class="pulse-dot"></span><span id="polarReturnStatus">Confirming card payment...</span></span>
+            </div>
           </div>
         </div>
 
-        <div id="liveOrderBox" class="price-summary-card" style="display:none;">
-          <div style="font-size:12px;color:var(--ink);font-weight:600;margin-bottom:6px;">
-            3. Send via Wise — Auto-Unlocks in ~10 Seconds (24/7):
-          </div>
-          <div style="font-size:11.5px;color:var(--ink-secondary);margin-bottom:8px;">
-            Open Wise (<span class="mono">wise.com</span> or app) → click <strong>Send</strong> → enter the recipient &amp; <strong>exact sen amount</strong> below so our cloud system matches your payment instantly:
-          </div>
-
-          <div class="kv-row">
-            <span class="kv-key">Wise Recipient Email</span>
-            <span class="kv-val">
-              <span id="wiseEmailVal">jycheah7@gmail.com</span>
-              <button type="button" class="copy-chip" onclick="copyText('jycheah7@gmail.com', this)">Copy</button>
-            </span>
-          </div>
-          <div class="kv-row">
-            <span class="kv-key">Exact Amount to Send</span>
-            <span class="kv-val" style="font-size:15px;color:var(--forest);">
-              <span id="exactPayAmount">MYR 29.01</span>
-              <button type="button" class="copy-chip" onclick="copyExactAmount(this)">Copy</button>
-            </span>
-          </div>
-          <div class="kv-row">
-            <span class="kv-key">Reference Note</span>
-            <span class="kv-val">
-              <span id="exactOrderRef">ORD-000000</span>
-              <button type="button" class="copy-chip" onclick="copyOrderRef(this)">Copy</button>
-            </span>
+        <!-- Option B: Direct Wise MYR / USD Auto-Transfer -->
+        <div id="wisePaySection" style="display:none;">
+          <div style="margin-bottom:14px;">
+            <label class="field-label">1. Choose Wise Currency</label>
+            <div class="segmented" style="width:100%;display:grid;grid-template-columns:1fr 1fr;">
+              <button type="button" id="curBtnMYR" class="seg-btn active" onclick="selectCheckoutCurrency('MYR')">MYR 29 · Malaysia</button>
+              <button type="button" id="curBtnUSD" class="seg-btn" onclick="selectCheckoutCurrency('USD')">USD 8 · International</button>
+            </div>
           </div>
 
-          <div class="poll-banner">
-            <span><span class="pulse-dot"></span><span id="orderPollStatus">Waiting for Wise transfer...</span></span>
-            <button type="button" class="copy-chip" onclick="verifyNowManualTrigger()">I've Sent It — Check Now</button>
+          <div style="margin-bottom:14px;">
+            <label class="field-label" for="buyerEmailInput">2. Your Email for Backup Key Receipt <span style="font-weight:400;color:var(--ink-muted);">(Recommended)</span></label>
+            <div style="display:flex;gap:8px;">
+              <input id="buyerEmailInput" type="email" class="text-input" placeholder="you@company.com.my" />
+              <button type="button" class="btn btn-ink" style="white-space:nowrap;" onclick="startAutoOrder()">Update Email</button>
+            </div>
+          </div>
+
+          <div id="liveOrderBox" class="price-summary-card" style="display:none;">
+            <div style="font-size:12px;color:var(--ink);font-weight:600;margin-bottom:6px;">
+              3. Send via Wise — Auto-Unlocks in ~10 Seconds (24/7):
+            </div>
+            <div style="font-size:11.5px;color:var(--ink-secondary);margin-bottom:8px;">
+              Open Wise (<span class="mono">wise.com</span> or app) → click <strong>Send</strong> → enter the recipient &amp; <strong>exact sen amount</strong> below so our cloud system matches your payment instantly:
+            </div>
+
+            <div class="kv-row">
+              <span class="kv-key">Wise Recipient Email</span>
+              <span class="kv-val">
+                <span id="wiseEmailVal">jycheah7@gmail.com</span>
+                <button type="button" class="copy-chip" onclick="copyText('jycheah7@gmail.com', this)">Copy</button>
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">Exact Amount to Send</span>
+              <span class="kv-val" style="font-size:15px;color:var(--forest);">
+                <span id="exactPayAmount">MYR 29.01</span>
+                <button type="button" class="copy-chip" onclick="copyExactAmount(this)">Copy</button>
+              </span>
+            </div>
+            <div class="kv-row">
+              <span class="kv-key">Reference Note</span>
+              <span class="kv-val">
+                <span id="exactOrderRef">ORD-000000</span>
+                <button type="button" class="copy-chip" onclick="copyOrderRef(this)">Copy</button>
+              </span>
+            </div>
+
+            <div class="poll-banner">
+              <span><span class="pulse-dot"></span><span id="orderPollStatus">Waiting for Wise transfer...</span></span>
+              <button type="button" class="copy-chip" onclick="verifyNowManualTrigger()">I've Sent It — Check Now</button>
+            </div>
           </div>
         </div>
 
@@ -1174,12 +1220,17 @@
     } from './myinvois-client.mjs';
 
     const CLOUD_AUTOPAY_EXEC_URL = 'https://script.google.com/macros/s/AKfycbyxApiw79oG_JHvooqtsc3ctxSwqXuzPqVUM64T2Ifj9aYK2kxRVwq-ABUgO0cOBK6y/exec';
+    const POLAR_CHECKOUT_LINKS = {
+      MYINVOIS: 'https://buy.polar.sh/polar_cl_QdGYU1CfYYheRMXdEi0I82DOmggHEDCHNiHfV11vUGM',
+      TABLESNAP: 'https://buy.polar.sh/polar_cl_RO90LqNY28UQZn6BBS5CB58kAEeikhqb3UzPP3fWme4',
+    };
 
     let currentAudit = null;
     let activeRowFilter = 'ALL';
     let pollTimer = null;
     let activeOrderId = null;
     let activeCheckoutProduct = 'MYINVOIS';
+    let activePaymentRail = 'CARD';
     let selectedCurrency = 'MYR';
     let isUnlocked = Boolean(localStorage.getItem('zyk_myinvois_key'));
 
@@ -1467,6 +1518,19 @@
       }
     };
 
+    window.selectPaymentRail = (rail) => {
+      activePaymentRail = rail === 'WISE' ? 'WISE' : 'CARD';
+      document.getElementById('railBtnCard').classList.toggle('active', activePaymentRail === 'CARD');
+      document.getElementById('railBtnWise').classList.toggle('active', activePaymentRail === 'WISE');
+      document.getElementById('cardPaySection').style.display = activePaymentRail === 'CARD' ? 'block' : 'none';
+      document.getElementById('wisePaySection').style.display = activePaymentRail === 'WISE' ? 'block' : 'none';
+      if (activePaymentRail === 'WISE') {
+        window.startAutoOrder();
+      } else if (pollTimer) {
+        clearInterval(pollTimer);
+      }
+    };
+
     window.openUnlockDrawer = (product = 'MYINVOIS') => {
       activeCheckoutProduct = product === 'TABLESNAP' ? 'TABLESNAP' : 'MYINVOIS';
       const isTableSnap = activeCheckoutProduct === 'TABLESNAP';
@@ -1476,15 +1540,26 @@
       document.getElementById('drawerTitle').textContent = isTableSnap
         ? 'Unlock TableSnap Pro (Unlimited Rows & Excel)'
         : 'Unlock Unlimited Monthly Exports';
+      document.getElementById('cardProductLabel').textContent = isTableSnap
+        ? 'TableSnap Pro · Lifetime'
+        : 'MyInvois Batch Doctor · Lifetime';
+      document.getElementById('cardPriceLabel').textContent = isTableSnap
+        ? 'USD 9.00 (One-time)'
+        : 'USD 6.99 (~RM 30 One-time)';
+      document.getElementById('polarCardBuyLink').href = isTableSnap
+        ? POLAR_CHECKOUT_LINKS.TABLESNAP
+        : POLAR_CHECKOUT_LINKS.MYINVOIS;
       document.getElementById('curBtnMYR').textContent = 'MYR 29 · Malaysia';
       document.getElementById('curBtnUSD').textContent = isTableSnap ? 'USD 9 · International' : 'USD 8 · International';
       document.getElementById('licenseInput').placeholder = isTableSnap
         ? 'ZYK-TABLES-XXXXXXXX-XXXXXXXXXX'
         : 'ZYK-MYINVO-XXXXXXXX-XXXXXXXXXX';
 
-      selectCheckoutCurrency(isTableSnap ? 'USD' : 'MYR');
+      selectedCurrency = isTableSnap ? 'USD' : 'MYR';
+      document.getElementById('curBtnMYR').classList.toggle('active', selectedCurrency === 'MYR');
+      document.getElementById('curBtnUSD').classList.toggle('active', selectedCurrency === 'USD');
       document.getElementById('unlockDrawer').classList.add('open');
-      window.startAutoOrder();
+      window.selectPaymentRail('CARD');
     };
 
     window.closeUnlockDrawer = () => {
@@ -1637,10 +1712,47 @@
       }
     };
 
+    async function redeemPolarCheckoutOnReturn(checkoutId) {
+      const banner = document.getElementById('polarReturnBanner');
+      const statusEl = document.getElementById('polarReturnStatus');
+      banner.style.display = 'flex';
+      statusEl.textContent = 'Verifying your card payment with Polar...';
+
+      for (let attempt = 0; attempt < 8; attempt++) {
+        try {
+          const qs = new URLSearchParams({ action: 'redeemPolarCheckout', checkoutId });
+          const res = await fetch(`${CLOUD_AUTOPAY_EXEC_URL}?${qs.toString()}`);
+          const data = await res.json();
+          if (data?.ok && data.status === 'PAID' && data.licenseKey) {
+            if (data.productCode === 'TABLESNAP') {
+              activeCheckoutProduct = 'TABLESNAP';
+            }
+            statusEl.textContent = `Card Payment Confirmed! Key: ${data.licenseKey}`;
+            document.getElementById('licenseInput').value = data.licenseKey;
+            await window.activateManualKey();
+            const cleanUrl = window.location.pathname + (activeCheckoutProduct === 'TABLESNAP' ? '?checkout=TABLESNAP' : '');
+            window.history.replaceState({}, '', cleanUrl);
+            return;
+          }
+          if (data?.status && data.status !== 'PROCESSING') {
+            statusEl.textContent = `Checkout status: ${data.status}. Complete payment or paste emailed key below.`;
+            return;
+          }
+        } catch {}
+        await new Promise((r) => setTimeout(r, 1600));
+      }
+      statusEl.textContent = 'Check your email inbox for your automatic License Key receipt.';
+    }
+
     window.loadBrokenSample();
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('checkout') === 'TABLESNAP') {
       window.openUnlockDrawer('TABLESNAP');
+    }
+    const returnedCheckoutId = urlParams.get('checkout_id');
+    if (returnedCheckoutId) {
+      window.openUnlockDrawer(urlParams.get('checkout') === 'TABLESNAP' ? 'TABLESNAP' : 'MYINVOIS');
+      redeemPolarCheckoutOnReturn(returnedCheckoutId);
     }
   </script>
 </body>
