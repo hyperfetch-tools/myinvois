@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-MY">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How to Submit Shopee, Lazada &amp; TikTok Shop Malaysia Monthly Orders to LHDN MyInvois (2026 Step-by-Step Guide)</title>
+  <meta name="description" content="Complete step-by-step guide for Malaysian Shopee, Lazada & TikTok Shop sellers to convert monthly order CSV exports into LHDN MyInvois Consolidated e-Invoices (004 + EI00000000010, MSIC 47912) before the 7th of every month." />
+  <link rel="canonical" href="https://hyperfetch-tools.github.io/myinvois/shopee-myinvois-guide.html" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; font-family:"Plus Jakarta Sans",sans-serif; background:#f6f5f0; color:#111315; line-height:1.65; }
+    .wrap { max-width:780px; margin:0 auto; padding:40px 22px 72px; }
+    .mono, code { font-family:"IBM Plex Mono",monospace; font-size:0.92em; background:#ebe9e1; padding:1px 5px; border-radius:3px; }
+    h1 { font-size:30px; line-height:1.2; letter-spacing:-0.02em; margin:8px 0 14px; }
+    h2 { font-size:20px; margin:28px 0 10px; }
+    .card { background:#fff; border:1px solid #dfddd4; border-radius:6px; padding:20px 22px; margin:20px 0; }
+    .cta { display:inline-block; background:#111315; color:#fff; text-decoration:none; font-weight:600; padding:10px 18px; border-radius:5px; margin-top:10px; }
+    table { width:100%; border-collapse:collapse; font-size:13.5px; background:#fff; border:1px solid #dfddd4; }
+    th, td { padding:10px 12px; border-bottom:1px solid #dfddd4; text-align:left; }
+    th { background:#faf9f6; font-size:12px; text-transform:uppercase; color:#686c73; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <p><a href="./index.html" style="color:#14532d;font-weight:600;text-decoration:none;">← Open Free Shopee-to-MyInvois Converter</a></p>
+    <div style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#14532d;">Malaysia e-Invoice Practical Guide (2026)</div>
+    <h1>How to Submit Shopee, Lazada &amp; TikTok Shop Monthly Orders to LHDN MyInvois</h1>
+    <p>
+      Under LHDN's e-Invoice guidelines, Malaysian online sellers do <strong>not</strong> need to key in hundreds of individual Shopee or TikTok Shop parcels one by one—unless a buyer specifically requested a tax e-Invoice during that month. Instead, you can submit a <strong>Monthly Consolidated e-Invoice</strong> within <strong>7 calendar days after the end of each month</strong> (for example, October sales must be submitted by November 7).
+    </p>
+
+    <div class="card">
+      <strong>Skip Manual Excel Editing:</strong> Drop your raw Shopee/Lazada CSV directly into our privacy-first converter to auto-fill <code>EI00000000010</code>, <code>004</code>, ISO dates, and separate orders above RM 10,000 in 5 seconds.<br/>
+      <a class="cta" href="./index.html">Convert My Shopee / Lazada CSV Now →</a>
+    </div>
+
+    <h2>1. Required LHDN Codes for Shopee &amp; Online Sellers</h2>
+    <table>
+      <thead>
+        <tr><th>MyInvois Field</th><th>Exact Value to Use</th><th>Why LHDN Requires It</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Supplier MSIC Code</td><td><code>47912</code></td><td>Official 5-digit MSIC for retail sale of any product over the Internet.</td></tr>
+        <tr><td>Buyer TIN</td><td><code>EI00000000010</code></td><td>Mandatory General Public TIN for consolidated B2C buyers.</td></tr>
+        <tr><td>Line Classification</td><td><code>004</code></td><td>Consolidated e-Invoice classification (prevents Error <code>ERR236</code>).</td></tr>
+        <tr><td>Buyer BRN / SST / Address</td><td><code>NA</code></td><td>Must be literal <code>NA</code>, never left blank.</td></tr>
+        <tr><td>Unit of Measure (UOM)</td><td><code>C62</code> or <code>XUN</code></td><td>Shopee exports <code>pcs</code>, which LHDN rejects; map to UN/ECE <code>C62</code>.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>2. Step-by-Step Monthly Workflow (Takes 2 Minutes)</h2>
+    <ol>
+      <li><strong>Export Completed Orders:</strong> In Shopee Seller Centre, go to <em>My Orders → Completed → Export</em> for the previous calendar month.</li>
+      <li><strong>Watch the RM 10,000 Rule:</strong> Under LHDN Specific Guideline Section 3.6, any single receipt exceeding <strong>RM 10,000.00</strong> cannot be included inside a consolidated <code>004</code> e-Invoice—it must be separated as an individual document.</li>
+      <li><strong>Convert to 11-Sheet MyInvois Excel or XML:</strong> Open <a href="./index.html">MyInvois Batch Doctor</a>, enter your company TIN, 12-digit SSM number, and MSIC <code>47912</code>, and drop your Shopee CSV.</li>
+      <li><strong>Upload to MyInvois Portal:</strong> Log in to <code>myinvois.hasil.gov.my</code>, open Batch Submission, and upload the generated file.</li>
+    </ol>
+
+    <div class="card">
+      <strong>Ready to convert this month's Shopee or POS report?</strong><br/>
+      Zero data storage — preview runs in your browser and exports compile in stateless RAM. Free preview &amp; 3-row test included.<br/>
+      <a class="cta" href="./index.html">Launch MyInvois Batch Doctor →</a>
+    </div>
+  </main>
+</body>
+</html>
